@@ -48,6 +48,43 @@ Two smaller notes:
 
 ---
 
+## Where it is deployed
+
+| | |
+| --- | --- |
+| Preview | <https://maksimsyrvachev.github.io/hydra-steam-foam/> |
+| Repository | <https://github.com/MaksimSyrvachev/hydra-steam-foam> (public) |
+| Source | GitHub Pages, `main` branch, `/` root |
+
+Publishing is just a push — Pages rebuilds `main` automatically:
+
+```bash
+git add -A && git commit -m "Update copy" && git push
+```
+
+**This is a preview, not the live site.** Two files exist only to keep it that
+way, and both must be dealt with before a real domain points here:
+
+- **`robots.txt`** disallows all crawlers. The production site is
+  `www.hydrasteamfoam.ae`, and two public copies of the same pages would
+  compete in search results. **Delete this file** when you point the real
+  domain at the repository, or you will keep the live site out of Google too.
+- **`.nojekyll`** stops GitHub running the pages through Jekyll. Leave it.
+
+Every path in the site is relative, so it works unchanged whether it is served
+from a subfolder (`/hydra-steam-foam/`), a domain root, or `file://`.
+
+To add the custom domain later:
+
+```bash
+gh api --method PUT /repos/MaksimSyrvachev/hydra-steam-foam/pages -f cname=www.hydrasteamfoam.ae
+```
+
+…then point a `CNAME` record for `www` at `maksimsyrvachev.github.io`, delete
+`robots.txt`, and clear the launch list at the top of this file first.
+
+---
+
 ## Running it
 
 Just open `index.html`. To serve it locally instead:
