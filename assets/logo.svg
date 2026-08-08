@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200" role="img" aria-label="Hydra Steam Foam">
+  <!-- The Hydra Steam Foam badge, redrawn as flat vector from the owner's
+       artwork: the oval with its navy ring and gold sweep, the Dubai skyline
+       in gold across the top, the cream sofa and navy bed, the rolled carpet,
+       and the steam wand throwing foam. The original is a raster illustration
+       with photographic shading; this is the same composition rebuilt so it
+       stays crisp at any size.
+
+       If the owner supplies the original file, save it as assets/logo.png and
+       point the <img src> in index.html at it — nothing else needs changing. -->
+  <defs>
+    <linearGradient id="hsf-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#efd694"/>
+      <stop offset=".45" stop-color="#c9a227"/>
+      <stop offset="1" stop-color="#a8811a"/>
+    </linearGradient>
+    <linearGradient id="hsf-navy" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b4a8f"/>
+      <stop offset="1" stop-color="#0b2a5e"/>
+    </linearGradient>
+    <clipPath id="hsf-inner">
+      <ellipse cx="110" cy="100" rx="95" ry="83"/>
+    </clipPath>
+  </defs>
+
+  <!-- Plate: white field, navy ring, gold sweep outside it -->
+  <ellipse cx="110" cy="100" rx="95" ry="83" fill="#ffffff"/>
+  <ellipse cx="110" cy="100" rx="99" ry="87" fill="none" stroke="url(#hsf-navy)" stroke-width="7"/>
+  <ellipse cx="110" cy="100" rx="105" ry="93" fill="none" stroke="url(#hsf-gold)" stroke-width="3"/>
+  <!-- The two gold arcs that break past the oval on the original badge -->
+  <path d="M13,62 A105,93 0 0 0 13,138" fill="none" stroke="url(#hsf-gold)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M207,62 A105,93 0 0 1 207,138" fill="none" stroke="url(#hsf-gold)" stroke-width="5" stroke-linecap="round"/>
+
+  <g clip-path="url(#hsf-inner)">
+    <!-- Dubai skyline. The two landmarks have to be readable or it is just a
+         bar chart: the Burj Al Arab's curved sail at the left, and the Burj
+         Khalifa's stepped tower and needle standing clear above everything. -->
+    <g fill="url(#hsf-gold)">
+      <path d="M34,72 L34,60 L41,60 L41,72 Z"/>
+      <path d="M45,72 C45,52 50,38 62,27 L62,72 Z"/>
+      <rect x="60.6" y="24" width="2" height="48"/>
+      <path d="M67,72 L67,52 L75,52 L75,72 Z"/>
+      <path d="M78,72 L78,42 L82,36 L86,42 L86,72 Z"/>
+      <path d="M96,72 L96,44 L99,44 L99,32 L101.4,32 L101.4,22 L103.3,22 L104.2,9 L105,9 L105.9,22 L107.8,22 L107.8,32 L110.2,32 L110.2,44 L113.2,44 L113.2,72 Z"/>
+      <path d="M117,72 L117,54 L124,54 L124,72 Z"/>
+      <path d="M128,72 L128,40 L132,34 L136,40 L136,72 Z"/>
+      <path d="M139,72 L139,48 L147,48 L147,72 Z"/>
+      <path d="M150,72 L150,58 L156,58 L156,72 Z"/>
+      <path d="M159,72 L159,45 L167,45 L167,72 Z"/>
+      <path d="M170,72 L170,55 L177,55 L177,72 Z"/>
+      <path d="M180,72 L180,62 L186,62 L186,72 Z"/>
+    </g>
+
+    <!-- Bed, behind and to the right of the sofa -->
+    <g>
+      <rect x="152" y="78" width="12" height="45" rx="3" fill="url(#hsf-navy)"/>
+      <rect x="160" y="111" width="48" height="12" rx="3" fill="#08214b"/>
+      <rect x="160" y="99" width="48" height="14" rx="3" fill="#f4ead6" stroke="#ded0b2" stroke-width="1"/>
+      <rect x="186" y="99" width="22" height="14" rx="3" fill="url(#hsf-navy)"/>
+      <rect x="166" y="88" width="16" height="11" rx="4" fill="#f4ead6" stroke="#ded0b2" stroke-width="1"/>
+    </g>
+
+    <!-- Rolled carpet, and the rug it came off -->
+    <ellipse cx="132" cy="167" rx="54" ry="8" fill="#eadcbc"/>
+    <ellipse cx="132" cy="167" rx="44" ry="5" fill="none" stroke="#d3bd8f" stroke-width="1.5"/>
+    <rect x="134" y="145" width="50" height="15" rx="7" fill="#e4d3ae"/>
+    <circle cx="134" cy="152.5" r="7.5" fill="#d3bd8f"/>
+    <circle cx="134" cy="152.5" r="3.4" fill="none" stroke="#b39c6c" stroke-width="1.4"/>
+
+    <!-- Sofa: cream frame, navy cushions -->
+    <g>
+      <rect x="66" y="96" width="76" height="24" rx="8" fill="#f4ead6" stroke="#ded0b2" stroke-width="1.2"/>
+      <rect x="72" y="99" width="20" height="18" rx="3" fill="url(#hsf-navy)"/>
+      <rect x="96" y="99" width="20" height="18" rx="3" fill="url(#hsf-navy)"/>
+      <rect x="120" y="99" width="18" height="18" rx="3" fill="url(#hsf-navy)"/>
+      <rect x="62" y="114" width="84" height="24" rx="8" fill="#f4ead6" stroke="#ded0b2" stroke-width="1.2"/>
+      <rect x="62" y="104" width="16" height="34" rx="8" fill="#f4ead6" stroke="#ded0b2" stroke-width="1.2"/>
+      <rect x="130" y="104" width="16" height="34" rx="8" fill="#f4ead6" stroke="#ded0b2" stroke-width="1.2"/>
+      <rect x="70" y="138" width="5" height="8" rx="1.5" fill="#0b2a5e"/>
+      <rect x="133" y="138" width="5" height="8" rx="1.5" fill="#0b2a5e"/>
+    </g>
+
+    <!-- Steam wand: hose off the bottom-left, straight handle, and a flat
+         extraction head laid on the sofa seat. Drawn head-last so the plate
+         sits on top of the cushion rather than behind it. -->
+    <path d="M10,182 C14,168 20,158 30,150" fill="none" stroke="#131b2b" stroke-width="6" stroke-linecap="round"/>
+    <path d="M31,149 L64,120" fill="none" stroke="#1c2740" stroke-width="12" stroke-linecap="round"/>
+    <path d="M34,146 L58,125" fill="none" stroke="#33415e" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M58,113 L88,127 L83,137 L53,123 Z" fill="#131b2b"/>
+    <path d="M83,131 L92,135 L89,141 L80,137 Z" fill="#3b4a68"/>
+
+    <!-- Foam. Needs a real outline: white-on-white reads as nothing. -->
+    <g fill="#ffffff" stroke="#a9c3e4" stroke-width="2">
+      <circle cx="40" cy="102" r="13"/>
+      <circle cx="60" cy="86" r="10"/>
+      <circle cx="30" cy="79" r="7.5"/>
+      <circle cx="50" cy="66" r="6.5"/>
+      <circle cx="24" cy="121" r="8.5"/>
+      <circle cx="44" cy="127" r="6"/>
+      <circle cx="72" cy="72" r="5"/>
+      <circle cx="33" cy="59" r="4"/>
+    </g>
+    <g fill="#dceafa">
+      <circle cx="36" cy="98" r="4"/>
+      <circle cx="57" cy="83" r="3"/>
+      <circle cx="21" cy="118" r="2.6"/>
+    </g>
+  </g>
+</svg>

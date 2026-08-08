@@ -1,0 +1,11 @@
+# This copy of the site is a PREVIEW hosted on github.io.
+#
+# The production site is https://www.hydrasteamfoam.ae — two public copies of
+# the same pages would compete with each other in search results, and the
+# preview is the one that should lose. It also still carries the sample
+# testimonials noted in README.md.
+#
+# DELETE THIS FILE before pointing a real domain at this repository,
+# otherwise you will keep the live site out of Google as well.
+User-agent: *
+Disallow: /

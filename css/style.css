@@ -1,0 +1,1617 @@
+/* =====================================================================
+   HYDRA STEAM FOAM — design system.
+
+   This is a reskin of the owner's own printed flyer and banner, not an
+   interpretation of them. What is taken directly from that artwork:
+
+     - the palette: flyer navy #0b2a5e, brand gold #c9a227, white ground
+     - the white-above / navy-below split, with the gold wave as the seam
+     - the gold hairline ending in a small diamond, as the divider device
+     - the navy service pill: SOFA . MATTRESS . CARPET . CAR INTERIOR
+     - the service card: navy title bar, photo, a gold disc straddling the
+       photo's lower edge, centred copy on navy
+     - "WHY CHOOSE HYDRA STEAM FOAM?" and the SPECIAL OFFER box side by
+       side in one navy band, divided by a gold rule
+     - the navy-with-gold-ring call to action
+     - the white contact strip with navy rounded-square icons
+
+   Type is Sora (display — the geometric voice of the HYDRA wordmark) over
+   Plus Jakarta Sans (UI), with Alexandria for all Arabic, and Playfair
+   Display italic for the one line the flyer sets in an italic serif.
+
+   Direction is handled with CSS logical properties throughout, so there is
+   one stylesheet for both left-to-right and right-to-left.
+
+   Contrast: every text token below was checked against every surface it is
+   used on, in both themes, at AA (4.5:1). Ratios are noted where a choice
+   would otherwise look arbitrary — in particular, brand gold is a 2.3:1
+   colour on a light page, so on light it is a *decorative* fill only and
+   gold-coloured text falls back to --gold-ink.
+   ===================================================================== */
+
+/* ------------------------------------------------------------------ *
+   Tokens
+ * ------------------------------------------------------------------ */
+:root {
+  --font-display: "Sora", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ui: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-ar: "Alexandria", "Plus Jakarta Sans", system-ui, sans-serif;
+
+  --wrap: 1200px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --radius: 20px;
+  --radius-sm: 13px;
+  --radius-pill: 999px;
+
+  --step: clamp(3.5rem, 7vw, 6rem);      /* vertical section rhythm */
+  --ring: 0 0 0 3px color-mix(in srgb, var(--brand) 38%, transparent);
+
+  color-scheme: light;
+}
+
+/* Light — the flyer's white upper half, navy ink, gold as metal */
+:root,
+[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-alt: #eef3fa;
+  --surface: #ffffff;
+  --surface-2: #f4f8fd;
+  --ink: #0a1b35;
+  --ink-2: #3a4c6b;
+  --ink-3: #5b6b8a;          /* 4.72:1 on --bg-alt, the darkest surface it sits on */
+  --line: rgba(10, 27, 53, .13);
+  --line-2: rgba(10, 27, 53, .07);
+
+  --brand: #0b2a5e;          /* the flyer navy — 13.1:1 on --bg */
+  --brand-hover: #061c44;
+  --brand-ink: #ffffff;      /* 13.1:1 on --brand */
+  --brand-wash: color-mix(in srgb, var(--brand) 9%, transparent);
+
+  /* Decorative gold. Never used for text on a light surface — 2.27:1. */
+  --gold: #c9a227;
+  --gold-soft: #e8d29a;
+  /* The text-safe bronze. Deep, because the tightest place it has to work is
+     the step number — small bold type on a brand-tinted wash over --bg-alt,
+     the palest-on-palest pairing on the page. At #8a6a10 that measured
+     3.75:1; this clears it at 5.49:1, and 6.96:1 on --bg. */
+  --gold-ink: #6b5209;
+  --diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%23c9a227'/%3E%3C/svg%3E");
+
+  /* WhatsApp green darkened from the brand #25d366 so a white label clears
+     AA on the button fill (5.06:1 rather than 3.09:1). */
+  --wa: #157f43;
+  --wa-hover: #106334;
+  --wa-ink: #ffffff;
+
+  /* The navy bands carry type directly on brand navy, so they hold their
+     own fixed pair in both themes — matched to the flyer's lower half. */
+  --band-bg: #0b2a5e;
+  --band-bg-2: #061e46;      /* the darker stop of the band gradient */
+  --band-ink: #ffffff;
+  --band-ink-2: #bccbe6;     /* 7.9:1 on --band-bg */
+  --band-line: rgba(201, 162, 39, .42);
+
+  --shadow: 0 1px 2px rgba(10, 27, 53, .05), 0 14px 32px -16px rgba(10, 27, 53, .22);
+  --shadow-lg: 0 32px 64px -30px rgba(10, 27, 53, .40);
+  color-scheme: light;
+}
+
+/* Dark — the badge itself: deep navy with the gold lit up */
+[data-theme="dark"] {
+  --bg: #060e1e;
+  --bg-alt: #0a1526;
+  --surface: #0f1c33;
+  --surface-2: #16243f;
+  --ink: #e8eefb;
+  --ink-2: #adbcd6;
+  --ink-3: #8395b3;
+  --line: rgba(232, 238, 251, .15);
+  --line-2: rgba(232, 238, 251, .08);
+
+  --brand: #8fb0ff;          /* 8.9:1 on --bg */
+  --brand-hover: #b0c7ff;
+  --brand-ink: #05132b;      /* 9.1:1 on --brand */
+  --brand-wash: color-mix(in srgb, var(--brand) 14%, transparent);
+
+  /* On dark the gold is legible as text, so both tokens can be the metal. */
+  --gold: #e7c66a;
+  --gold-soft: #f2dda4;
+  --gold-ink: #e7c66a;       /* 10.9:1 on --bg */
+  --diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0 10 5 5 10 0 5Z' fill='%23e7c66a'/%3E%3C/svg%3E");
+
+  --wa: #25d366;
+  --wa-hover: #4ee089;
+  --wa-ink: #04160c;         /* 9.41:1 on --wa */
+
+  --band-bg: #071d42;
+  --band-bg-2: #04122c;
+  --band-ink: #ffffff;
+  --band-ink-2: #bccbe6;
+  --band-line: rgba(231, 198, 106, .42);
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 16px 36px -18px rgba(0, 0, 0, .75);
+  --shadow-lg: 0 36px 72px -32px rgba(0, 0, 0, .88);
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------ *
+   Base
+ * ------------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-block-start: 6rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, .97rem + .16vw, 1.075rem);
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+[lang="ar"] body,
+[lang="ar"] .btn,
+[lang="ar"] .input,
+[lang="ar"] .select,
+[lang="ar"] .textarea { font-family: var(--font-ar); }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3 {
+  font-family: var(--font-ar);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+p { margin: 0; text-wrap: pretty; }
+img { max-width: 100%; height: auto; display: block; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+a { color: inherit; }
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection { background: var(--brand); color: #fff; }
+
+.wrap {
+  inline-size: min(100% - (var(--gutter) * 2), var(--wrap));
+  margin-inline: auto;
+}
+
+.icon {
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  fill: currentColor;
+  flex: none;
+}
+
+/* The gold ribbon off the badge, as a page-top rule. */
+.brandline {
+  block-size: 4px;
+  background: linear-gradient(90deg, #a8821a, #e8d29a 22%, var(--gold) 50%, #e8d29a 78%, #a8821a);
+}
+
+.skip {
+  position: absolute;
+  inset-block-start: -100px;
+  inset-inline-start: 1rem;
+  z-index: 100;
+  padding: .7rem 1.2rem;
+  background: var(--brand);
+  color: var(--brand-ink);
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip:focus { inset-block-start: 1rem; }
+
+/* ------------------------------------------------------------------ *
+   Reveal on scroll
+ * ------------------------------------------------------------------ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.22, .8, .3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal][data-shown="true"] { opacity: 1; transform: none; }
+.no-js [data-reveal] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------------ *
+   Buttons — pills, because everything this business touches is soft
+ * ------------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .8rem 1.4rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -.005em;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .15s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease, color .15s ease;
+}
+[lang="ar"] .btn { font-family: var(--font-ar); letter-spacing: 0; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+/* The flyer's own button: navy fill, gold hairline ring inset inside a second
+   gold border, white uppercase label. The ring is an inset box-shadow rather
+   than a second element so it follows the pill radius exactly. */
+.btn--primary {
+  background: linear-gradient(180deg, #123a78, var(--brand) 60%, #071f4a);
+  color: #ffffff;
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .1),
+              0 10px 22px -12px rgba(11, 42, 94, .9);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-weight: 700;
+}
+[lang="ar"] .btn--primary { text-transform: none; letter-spacing: 0; }
+.btn--primary:hover { background: linear-gradient(180deg, #1a4a92, #0d3068 60%, #0a2a5e); }
+
+/* Gold fill with navy type — 7.11:1, and the only place gold carries text
+   on a light page. */
+.btn--gold {
+  background: linear-gradient(135deg, #e6cb72, var(--gold) 55%, #b08c17);
+  color: #0a1b35;
+  box-shadow: 0 10px 22px -12px rgba(201, 162, 39, .9);
+}
+.btn--gold:hover { filter: brightness(1.06); }
+
+.btn--whatsapp {
+  background: var(--wa);
+  color: var(--wa-ink);
+  box-shadow: 0 10px 22px -12px color-mix(in srgb, var(--wa) 90%, transparent);
+}
+.btn--whatsapp:hover { background: var(--wa-hover); }
+
+.btn--ghost {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn--ghost:hover { border-color: var(--brand); color: var(--brand); background: var(--surface-2); }
+
+/* On a dark photo band the ghost button needs its own pair. */
+.btn--onband {
+  background: rgba(255, 255, 255, .1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, .38);
+}
+.btn--onband:hover { background: rgba(255, 255, 255, .18); border-color: #ffffff; color: #ffffff; }
+
+.btn--lg { padding: 1rem 1.75rem; font-size: 1.06rem; }
+
+/* white-space: normal, or a long label becomes the page's minimum width */
+.btn--block { display: flex; inline-size: 100%; white-space: normal; }
+
+/* ------------------------------------------------------------------ *
+   Header
+ * ------------------------------------------------------------------ */
+.header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(1.5) blur(16px);
+  border-block-end: 1px solid transparent;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.header[data-stuck="true"] {
+  border-block-end-color: var(--line);
+  box-shadow: 0 12px 30px -26px rgba(0, 0, 0, .8);
+}
+
+.header__in {
+  display: flex;
+  align-items: center;
+  gap: clamp(.7rem, 2vw, 1.5rem);
+  min-block-size: 4.7rem;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  text-decoration: none;
+  color: inherit;
+  flex: none;
+}
+/* The badge is a 220x200 oval, so it is sized by height and left to find its
+   own width — no border-radius, the artwork carries its own shape. */
+.logo__mark { inline-size: auto; block-size: 3rem; }
+/* The wordmark stacked as the flyer stacks it: HYDRA, then STEAM FOAM in
+   gold between two rules, then the descriptor. */
+.logo__text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.16rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+[lang="ar"] .logo__name { font-family: var(--font-ar); font-weight: 700; letter-spacing: 0; text-transform: none; }
+.logo__name2 {
+  display: flex;
+  align-items: center;
+  gap: .32rem;
+  margin-block-start: .1rem;
+  font-family: var(--font-display);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+  white-space: nowrap;
+}
+[lang="ar"] .logo__name2 { font-family: var(--font-ar); letter-spacing: .04em; text-transform: none; font-size: .76rem; }
+.logo__name2::before, .logo__name2::after {
+  content: "";
+  block-size: 1.5px;
+  inline-size: .6rem;
+  flex: none;
+  background: var(--gold);
+}
+.logo__sub {
+  margin-block-start: .18rem;
+  font-size: .55rem;
+  color: var(--ink-3);
+  font-weight: 700;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+[lang="ar"] .logo__sub { letter-spacing: 0; text-transform: none; font-size: .66rem; }
+
+.nav { margin-inline-start: auto; }
+.nav__list { display: flex; align-items: center; gap: clamp(.5rem, 1.3vw, 1.15rem); }
+.nav__link {
+  position: relative;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: .93rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+  padding-block: .4rem;
+  transition: color .15s ease;
+}
+.nav__link::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  inline-size: 0;
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+  transition: inline-size .22s ease;
+}
+.nav__link:hover { color: var(--ink); }
+.nav__link:hover::after { inline-size: 100%; }
+
+.header__actions { display: flex; align-items: center; gap: .45rem; margin-inline-start: auto; }
+.nav + .header__actions { margin-inline-start: 0; }
+
+.iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  min-inline-size: 2.55rem;
+  block-size: 2.55rem;
+  padding-inline: .6rem;
+  background: var(--surface);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: .82rem;
+  font-weight: 600;
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+}
+[lang="ar"] .iconbtn { font-family: var(--font-ar); }
+.iconbtn:hover { color: var(--brand); border-color: var(--brand); }
+.lang-btn__label { line-height: 1; }
+
+.theme-toggle .icon--moon { display: none; }
+[data-theme="dark"] .theme-toggle .icon--sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon--moon { display: inline-block; }
+
+.nav-toggle { display: none; }
+
+@media (max-width: 1140px) {
+  .nav { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .header__actions { margin-inline-start: auto; }
+}
+@media (max-width: 620px) {
+  .header__cta { display: none; }
+  .logo__sub { display: none; }
+}
+@media (max-width: 420px) {
+  /* Below this the wordmark plus the three header controls no longer fit
+     alongside each other. The badge alone still links home. */
+  .header .logo__text { display: none; }
+}
+
+/* ------------------------------------------------------------------ *
+   Drawer
+ * ------------------------------------------------------------------ */
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  visibility: hidden;
+  transition: visibility 0s .3s;
+  overflow: hidden;           /* a parked panel must not widen the document */
+}
+.drawer[data-open="true"] { visibility: visible; transition-delay: 0s; }
+
+.drawer__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(4, 10, 22, .64);
+  opacity: 0;
+  transition: opacity .3s ease;
+  cursor: pointer;
+}
+.drawer[data-open="true"] .drawer__scrim { opacity: 1; }
+
+.drawer__panel {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: min(23rem, 88vw);
+  background: var(--bg);
+  border-inline-start: 1px solid var(--line);
+  padding: 1.25rem var(--gutter) 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform .32s cubic-bezier(.22, .8, .3, 1);
+}
+[dir="rtl"] .drawer__panel { transform: translateX(-100%); }
+.drawer[data-open="true"] .drawer__panel { transform: none; }
+
+.drawer__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.drawer__list { display: flex; flex-direction: column; }
+.drawer__link {
+  display: block;
+  padding-block: .8rem;
+  border-block-end: 1px solid var(--line-2);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+[lang="ar"] .drawer__link { font-family: var(--font-ar); }
+.drawer__link:hover { color: var(--brand); }
+.drawer__ctas { display: flex; flex-direction: column; gap: .6rem; margin-block-start: auto; }
+.drawer__meta { font-size: .85rem; color: var(--ink-3); margin-block-start: .5rem; }
+
+/* ------------------------------------------------------------------ *
+   Shared section furniture
+ * ------------------------------------------------------------------ */
+.section { padding-block: var(--step); }
+.section--tight { padding-block: calc(var(--step) * .7); }
+.section--alt { background: var(--bg-alt); }
+
+.head { max-inline-size: 48rem; margin-block-end: clamp(2rem, 4vw, 3.25rem); }
+.head--center { margin-inline: auto; text-align: center; }
+.head__title { font-size: clamp(1.9rem, 1.2rem + 2.5vw, 3rem); }
+.head__sub {
+  margin-block-start: 1rem;
+  color: var(--ink-2);
+  font-size: 1.06rem;
+  max-inline-size: 44rem;
+}
+.head--center .head__sub { margin-inline: auto; }
+
+/* The eyebrow is a gold hairline ending in the flyer's little gold diamond —
+   the same mark that divides "PROFESSIONAL UPHOLSTERY CLEANING SERVICES" from
+   the service list on the printed piece. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  margin-block-end: .9rem;
+  font-family: var(--font-display);
+  font-size: .77rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+[lang="ar"] .eyebrow {
+  font-family: var(--font-ar);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: .9rem;
+}
+/* Line, then the flyer's little gold diamond. The diamond is an inline SVG
+   rather than crossed linear-gradients: two 45° gradient stripes overlaid
+   draw an "×", not a filled rhombus. --diamond carries the theme's gold so
+   the data URI itself never has to change. */
+.eyebrow::before {
+  content: "";
+  flex: none;
+  inline-size: 2.5rem;
+  block-size: 8px;
+  background:
+    var(--diamond) no-repeat right center / 8px 8px,
+    linear-gradient(90deg, var(--gold), var(--gold)) no-repeat left center / 1.7rem 1.5px;
+}
+[dir="rtl"] .eyebrow::before {
+  background:
+    var(--diamond) no-repeat left center / 8px 8px,
+    linear-gradient(90deg, var(--gold), var(--gold)) no-repeat right center / 1.7rem 1.5px;
+}
+.eyebrow--light { color: var(--gold-soft); }
+.head--center .eyebrow { justify-content: center; }
+
+/* The flyer's full-width divider: gold hairline — diamond — gold hairline. */
+.rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .85rem;
+  margin-block: 1.15rem;
+  color: var(--gold);
+}
+.rule::before, .rule::after {
+  content: "";
+  block-size: 1.5px;
+  inline-size: min(9rem, 22vw);
+  background: linear-gradient(90deg, transparent, currentColor 55%, currentColor);
+}
+.rule::after { background: linear-gradient(270deg, transparent, currentColor 55%, currentColor); }
+.rule__d {
+  inline-size: 9px;
+  block-size: 9px;
+  flex: none;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+.head--center .rule { margin-inline: auto; }
+/* In the hero the rule runs from the copy edge rather than being centred,
+   so it lines up with the eyebrow and the headline above it. */
+.hero__copy .rule { justify-content: flex-start; margin-block: 1.4rem .2rem; }
+.hero__copy .rule::before { inline-size: min(7rem, 26vw); }
+.hero__copy .rule::after { display: none; }
+
+/* The service list as the flyer sets it: a navy pill with a gold hairline,
+   the four services separated by gold bullets. */
+.pill {
+  margin-block-start: 1.5rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem .9rem;
+  padding: .55rem 1.35rem;
+  background: var(--brand);
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius-pill);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+[lang="ar"] .pill { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .92rem; }
+.pill li { display: flex; align-items: center; gap: .9rem; }
+.pill li + li::before {
+  content: "";
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex: none;
+}
+
+/* "Deep Clean. Fresh Feel. Healthy Living." — the one italic-serif line on
+   the flyer. Arabic has no matching italic serif, so it stays in Alexandria. */
+.tagline {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + .8vw, 1.6rem);
+  color: var(--brand);
+  letter-spacing: .01em;
+}
+[lang="ar"] .tagline { font-family: var(--font-ar); font-style: normal; font-weight: 600; letter-spacing: 0; }
+[data-theme="dark"] .tagline { color: var(--gold-soft); }
+
+.section__note {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-block-start: 1.9rem;
+  padding: 1rem 1.3rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  font-size: .96rem;
+}
+.section__note .icon { color: var(--gold-ink); }
+.section__note--link a { color: var(--brand); font-weight: 700; text-decoration: none; }
+.section__note--link a:hover { text-decoration: underline; }
+
+.grid { display: grid; gap: 1.25rem; }
+
+/* The one wave: the hero spilling into the statistics band, drawn the way
+   the badge's gold wave breaks over its bed of foam. preserveAspectRatio
+   is none so it stretches to any width without changing height. */
+.wave {
+  display: block;
+  inline-size: 100%;
+  block-size: clamp(38px, 5.5vw, 78px);
+  fill: var(--band-bg);
+  margin-block-end: -1px;    /* hairline seam between SVG and the band */
+}
+[dir="rtl"] .wave { transform: scaleX(-1); }
+
+/* ------------------------------------------------------------------ *
+   Hero
+ * ------------------------------------------------------------------ */
+.hero {
+  position: relative;
+  padding-block: clamp(2.5rem, 5vw, 4.5rem) clamp(3rem, 5vw, 4.5rem);
+  overflow: hidden;
+}
+/* Foam: two soft blooms behind the copy, one navy one gold, at the low
+   opacities that keep them readable as light rather than as shapes. */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero::before {
+  inset-block-start: -30%;
+  inset-inline-start: -14%;
+  inline-size: 46rem;
+  block-size: 46rem;
+  background: radial-gradient(circle at center,
+    color-mix(in srgb, var(--brand) 16%, transparent) 0%, transparent 62%);
+}
+.hero::after {
+  inset-block-end: -35%;
+  inset-inline-end: -10%;
+  inline-size: 32rem;
+  block-size: 32rem;
+  background: radial-gradient(circle at center,
+    color-mix(in srgb, var(--gold) 22%, transparent) 0%, transparent 65%);
+}
+
+.hero__in {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+@media (max-width: 940px) {
+  .hero__in { grid-template-columns: 1fr; }
+}
+
+.hero__title {
+  font-size: clamp(2.1rem, 1.1rem + 3.4vw, 3.15rem);
+  letter-spacing: -.03em;
+}
+[lang="ar"] .hero__title { letter-spacing: 0; }
+/* Gold underline under the method, the way the badge underlines its
+   wordmark. text-decoration rather than a box-shadow, because the phrase
+   wraps at most widths and a shadow paints one bar across the whole inline
+   box instead of one per line. */
+.hero__title em {
+  font-style: normal;
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: .08em;
+  text-underline-offset: .16em;
+  text-decoration-skip-ink: none;
+}
+.hero__sub {
+  margin-block-start: 1.2rem;
+  font-size: clamp(1.03rem, 1rem + .3vw, 1.15rem);
+  color: var(--ink-2);
+  max-inline-size: 36rem;
+}
+.hero__ctas { display: flex; flex-wrap: wrap; gap: .7rem; margin-block-start: 1.9rem; }
+
+.hero__open {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin-block-start: 1.25rem;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.hero__open:hover { color: var(--ink); }
+.hero__open .dot {
+  inline-size: .62rem;
+  block-size: .62rem;
+  border-radius: 50%;
+  background: var(--ink-3);
+  flex: none;
+}
+.hero__open [data-open-state] { display: none; }
+.hero__open:not([data-state]) [data-open-state="open"],
+.hero__open[data-state="open"] [data-open-state="open"],
+.hero__open[data-state="shut"] [data-open-state="shut"] { display: inline; }
+.hero__open[data-state="open"] .dot,
+.hero__open:not([data-state]) .dot {
+  background: #17a559;
+  box-shadow: 0 0 0 4px rgba(23, 165, 89, .18);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-block-start: 1.85rem;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .48rem .95rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.chip .icon { color: var(--gold-ink); inline-size: 1.1em; block-size: 1.1em; }
+
+.hero__media { position: relative; }
+.hero__frame {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 4 / 3.1;
+  background: var(--surface-2);
+}
+.hero__frame img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+/* A gold ring offset behind the photo — the badge's ring, enlarged. */
+.hero__media::before {
+  content: "";
+  position: absolute;
+  inset-block: 1.5rem -1.5rem;
+  inset-inline: 1.5rem -1.5rem;
+  border: 2px solid var(--gold);
+  border-radius: var(--radius);
+  opacity: .5;
+}
+@media (max-width: 940px) { .hero__media::before { display: none; } }
+
+.hero__badge {
+  position: absolute;
+  z-index: 2;
+  inset-block-end: -1.5rem;
+  inset-inline-start: -1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  padding: .95rem 1.15rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-inline-start: 4px solid var(--gold);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  max-inline-size: 18.5rem;
+}
+.hero__badge .icon { color: var(--gold-ink); inline-size: 1.6rem; block-size: 1.6rem; }
+.hero__badge-body { display: flex; flex-direction: column; gap: .1rem; min-inline-size: 0; }
+.hero__badge-t {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+[lang="ar"] .hero__badge-t { font-family: var(--font-ar); }
+.hero__badge-n { font-size: .8rem; color: var(--ink-3); line-height: 1.45; }
+@media (max-width: 940px) {
+  .hero__badge {
+    position: static;
+    margin-block-start: 1.25rem;
+    max-inline-size: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+   Facts — the one band where type sits directly on navy
+ * ------------------------------------------------------------------ */
+.facts {
+  padding-block: clamp(1.5rem, 3.5vw, 2.5rem) clamp(2rem, 4vw, 3rem);
+  background: var(--band-bg);
+  color: var(--band-ink);
+}
+.facts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1.75rem 1rem;
+}
+.fact { position: relative; text-align: center; }
+.fact + .fact::before {
+  content: "";
+  position: absolute;
+  inset-block: .35rem;
+  inset-inline-start: -.5rem;
+  border-inline-start: 1px solid rgba(255, 255, 255, .2);
+}
+@media (max-width: 720px) { .fact + .fact::before { display: none; } }
+.fact__value {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 1.4rem + 2vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  color: var(--gold-soft);
+}
+[lang="ar"] .fact__value { font-family: var(--font-ar); letter-spacing: 0; }
+.fact__value--word { font-size: clamp(1.45rem, 1rem + 1.3vw, 2rem); }
+.fact__unit { font-size: .42em; color: var(--band-ink-2); font-weight: 600; }
+.fact__label {
+  margin-block-start: .5rem;
+  margin-inline: auto;
+  max-inline-size: 15.5rem;
+  font-size: .88rem;
+  color: var(--band-ink-2);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------ *
+   Service cards — photo on top, the way the owner's own flyer sets them
+ * ------------------------------------------------------------------ */
+/* Service cards, built to the flyer's own anatomy: a navy card with a gold
+   hairline, a lighter navy title bar in white uppercase, the photograph, a
+   gold disc straddling the photo's lower edge, and centred body copy on
+   navy. Four across, as printed. */
+.svc__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  gap: 1.25rem;
+}
+
+.svc {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--band-bg), var(--band-bg-2));
+  border: 1.5px solid var(--band-line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.svc:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+  box-shadow: var(--shadow-lg);
+}
+.svc__bar {
+  padding: .85rem 1rem;
+  text-align: center;
+  background: #123a78;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+[lang="ar"] .svc__bar { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .95rem; }
+
+/* The ratio lives on the <img>, not on the wrapper. As a column flex item the
+   wrapper has an indefinite height, so the image's block-size: 100% resolved
+   to auto and its intrinsic height won — leaving the four cards with four
+   different photo heights (1.50, 1.50, 1.33, 1.78) instead of one. */
+.svc__media { position: relative; background: var(--surface-2); }
+.svc__media img { inline-size: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+.svc__icon {
+  position: absolute;
+  z-index: 1;
+  inset-block-end: -1.5rem;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e6cb72, var(--gold) 60%, #ab8615);
+  color: #0a1b35;
+  box-shadow: 0 4px 14px -4px rgba(0, 0, 0, .7);
+}
+[dir="rtl"] .svc__icon { transform: translateX(50%); }
+.svc__icon .icon { inline-size: 1.6rem; block-size: 1.6rem; }
+
+.svc__body { padding: 2.35rem 1.15rem 1.5rem; text-align: center; }
+.svc__text { margin-block-start: .55rem; color: var(--band-ink-2); font-size: .92rem; line-height: 1.6; }
+
+.also {
+  margin-block-start: 2.25rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.also__h {
+  font-family: var(--font-display);
+  font-size: .77rem;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-block-end: .9rem;
+}
+[lang="ar"] .also__h { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .88rem; }
+.also__list { display: flex; flex-wrap: wrap; gap: .55rem; }
+.also__item {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .42rem .9rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-pill);
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.also__item .icon { color: var(--gold-ink); inline-size: 1rem; block-size: 1rem; }
+
+/* ------------------------------------------------------------------ *
+   How it works — a numbered track
+ * ------------------------------------------------------------------ */
+.flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1.4rem;
+}
+.step { position: relative; padding-block-start: .35rem; }
+.step__n {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  margin-block-end: 1rem;
+  border-radius: 50%;
+  background: var(--brand-wash);
+  border: 1.5px solid color-mix(in srgb, var(--gold) 60%, transparent);
+  color: var(--gold-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.02rem;
+  font-variant-numeric: tabular-nums;
+}
+[lang="ar"] .step__n { font-family: var(--font-ar); }
+/* The dotted run between steps, drawn only where there is a next step to
+   run to — so it never trails off the end of a row. */
+.step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 1.85rem;
+  inset-inline-start: 3.6rem;
+  inline-size: calc(100% - 2.2rem);
+  block-size: 2px;
+  background: repeating-linear-gradient(90deg,
+    color-mix(in srgb, var(--gold) 65%, transparent) 0 6px, transparent 6px 12px);
+}
+@media (max-width: 1000px) { .step:not(:last-child)::before { display: none; } }
+.step__title { font-size: 1.1rem; }
+.step__text { margin-block-start: .55rem; color: var(--ink-2); font-size: .96rem; }
+
+/* ------------------------------------------------------------------ *
+   Why us — dark photo band, the flyer's own navy panel
+ * ------------------------------------------------------------------ */
+/* One navy band carrying both halves of the flyer's lower panel: the five
+   reasons on the left, the SPECIAL OFFER box on the right, a gold rule
+   between them, and the call to action centred underneath. */
+.whyoffer {
+  position: relative;
+  padding-block: var(--step);
+  color: var(--band-ink);
+  background: linear-gradient(165deg, var(--band-bg) 0%, var(--band-bg-2) 100%);
+  overflow: hidden;
+}
+/* A single warm bloom, so the flat navy has some depth on screen without
+   putting a photograph behind type. */
+.whyoffer::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -30%;
+  inset-inline-end: -10%;
+  inline-size: 40rem;
+  block-size: 40rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(201, 162, 39, .17) 0%, transparent 62%);
+  pointer-events: none;
+}
+
+.whyoffer__in {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 3rem);
+}
+@media (min-width: 1000px) {
+  .whyoffer__in { grid-template-columns: minmax(0, 1.95fr) minmax(0, 1fr); }
+  /* the gold divider the flyer puts between the two panels */
+  .whyoffer__offer {
+    border-inline-start: 1px solid var(--band-line);
+    padding-inline-start: clamp(1.5rem, 3vw, 2.75rem);
+  }
+}
+
+.why__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.05rem + 1.5vw, 2.05rem);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+}
+[lang="ar"] .why__title { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; }
+.why__sub {
+  margin-block-start: .9rem;
+  color: var(--band-ink-2);
+  max-inline-size: 44rem;
+  font-size: .98rem;
+}
+
+.why__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  gap: 1.5rem 0;
+  margin-block-start: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+.why__item { padding-inline: clamp(.5rem, 1.4vw, 1rem); text-align: center; }
+.why__item + .why__item { border-inline-start: 1px solid var(--band-line); }
+.why__ic {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  margin-inline: auto;
+  margin-block-end: .8rem;
+  color: var(--gold-soft);
+}
+.why__ic .icon { inline-size: 2.1rem; block-size: 2.1rem; }
+.why__t {
+  font-family: var(--font-display);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--gold-soft);
+}
+[lang="ar"] .why__t { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .88rem; }
+.why__x { margin-block-start: .45rem; color: var(--band-ink-2); font-size: .82rem; line-height: 1.5; }
+
+/* SPECIAL OFFER — a gold-ruled box on navy, set exactly as the flyer sets it */
+.offer__h {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  text-align: center;
+  margin-block-end: 1rem;
+}
+[lang="ar"] .offer__h { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; }
+.offer__box {
+  padding: 1.5rem 1.25rem 1.35rem;
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  text-align: center;
+}
+.offer__up {
+  font-family: var(--font-display);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+[lang="ar"] .offer__up { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .92rem; }
+.offer__value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: .35rem;
+  margin-block: .1rem;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 2.4rem + 4vw, 5.2rem);
+  font-weight: 800;
+  line-height: .95;
+  letter-spacing: -.04em;
+  color: var(--gold-soft);
+  font-variant-numeric: tabular-nums;
+}
+[lang="ar"] .offer__value { font-family: var(--font-ar); letter-spacing: 0; }
+.offer__off {
+  font-family: var(--font-display);
+  font-size: .42em;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  align-self: flex-end;
+  padding-block-end: .55em;
+}
+[lang="ar"] .offer__off { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; }
+.offer__on {
+  margin-block-start: .55rem;
+  font-family: var(--font-display);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+[lang="ar"] .offer__on { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .94rem; }
+.offer__note { margin-block-start: .85rem; color: var(--band-ink-2); font-size: .82rem; text-align: center; }
+
+.whyoffer__cta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .9rem;
+  margin-block-start: clamp(2rem, 4vw, 3rem);
+  text-align: center;
+}
+.whyoffer__cta .offer__text { color: var(--band-ink-2); font-size: .95rem; max-inline-size: 44rem; }
+.whyoffer__cta .btn { white-space: normal; }
+
+/* ------------------------------------------------------------------ *
+   Gallery
+ * ------------------------------------------------------------------ */
+.gal__scroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(80vw, 25rem);
+  gap: 1.1rem;
+  overflow-x: auto;
+  padding-block-end: .75rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+.gal__item { margin: 0; scroll-snap-align: start; }
+.gal__item img {
+  inline-size: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+.gal__hint {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin-block-start: .8rem;
+  font-size: .85rem;
+  color: var(--ink-3);
+}
+/* Directional arrows are the one icon class that must mirror in RTL — a
+   right-pointing chevron on an Arabic button reads as "back", not "go". */
+[dir="rtl"] .gal__hint .icon,
+[dir="rtl"] .btn .icon--arrow { transform: scaleX(-1); }
+
+/* ------------------------------------------------------------------ *
+   Reviews
+ * ------------------------------------------------------------------ */
+.rev__grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); }
+.review {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.review__stars { display: flex; gap: .12rem; color: var(--gold); margin-block-end: .8rem; }
+.review__stars .icon { inline-size: 1.05rem; block-size: 1.05rem; }
+.review__text { color: var(--ink-2); font-size: .97rem; margin-block-end: 1.3rem; }
+.review__foot {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  /* auto, not a fixed gap: the quotes differ in length, and this lines the
+     attributions up along the bottom of the row instead of letting each one
+     float wherever its own text ends. */
+  margin-block-start: auto;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--line-2);
+}
+.review__avatar {
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--brand-wash);
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .85rem;
+  letter-spacing: .02em;
+}
+[lang="ar"] .review__avatar { font-family: var(--font-ar); font-size: .72rem; letter-spacing: 0; }
+.review__who { display: flex; flex-direction: column; min-inline-size: 0; }
+.review__name { font-weight: 700; font-size: .95rem; }
+.review__meta { font-size: .8rem; color: var(--ink-3); }
+
+/* ------------------------------------------------------------------ *
+   Areas served
+ * ------------------------------------------------------------------ */
+.areas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+  gap: .6rem;
+}
+.areas__item {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .8rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: .92rem;
+  font-weight: 600;
+}
+.areas__item .icon { color: var(--gold-ink); inline-size: 1.05rem; block-size: 1.05rem; }
+
+/* ------------------------------------------------------------------ *
+   FAQ
+ * ------------------------------------------------------------------ */
+.faq { display: grid; gap: .8rem; max-inline-size: 52rem; }
+.faq__item {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.faq__item[open] { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); }
+.faq__q {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.35rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  list-style: none;
+}
+[lang="ar"] .faq__q { font-family: var(--font-ar); }
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q .icon {
+  margin-inline-start: auto;
+  color: var(--gold-ink);
+  transition: transform .22s ease;
+}
+.faq__item[open] .faq__q .icon { transform: rotate(180deg); }
+.faq__a {
+  padding: 0 1.35rem 1.3rem;
+  color: var(--ink-2);
+  font-size: .97rem;
+  max-inline-size: 46rem;
+}
+
+/* ------------------------------------------------------------------ *
+   Contact
+ * ------------------------------------------------------------------ */
+.contact__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr);
+  gap: clamp(1.75rem, 4vw, 3.25rem);
+  align-items: start;
+}
+@media (max-width: 940px) { .contact__grid { grid-template-columns: 1fr; } }
+
+.formcard {
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-block-start: 5px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.formcard .head__title { font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.15rem); }
+.formcard .head__sub { font-size: .99rem; }
+
+.form { display: grid; gap: 1rem; margin-block-start: 1.7rem; }
+.form__row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: .35rem; min-inline-size: 0; }
+.field__label { font-size: .88rem; font-weight: 700; }
+.field__hint { font-size: .78rem; color: var(--ink-3); line-height: 1.45; }
+.field__err { display: none; font-size: .8rem; color: #c3352b; font-weight: 700; }
+[data-theme="dark"] .field__err { color: #ff8a80; }
+.field[data-invalid="true"] .field__err { display: block; }
+.field[data-invalid="true"] .input,
+.field[data-invalid="true"] .select { border-color: #c3352b; }
+
+.input, .select, .textarea {
+  inline-size: 100%;
+  padding: .8rem .95rem;
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: .97rem;
+}
+.textarea { resize: vertical; min-block-size: 5.5rem; }
+.input::placeholder, .textarea::placeholder { color: var(--ink-3); opacity: .9; }
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: var(--ring);
+}
+.select-wrap { position: relative; display: block; }
+.select { appearance: none; padding-inline-end: 2.5rem; cursor: pointer; }
+.select-wrap .icon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: .9rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--ink-3);
+}
+
+.form__status {
+  display: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .45rem;
+  padding: .85rem 1.1rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--wa) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--wa) 42%, transparent);
+  font-size: .9rem;
+}
+.form__status[data-show="true"] { display: flex; }
+.form__status .icon { color: var(--wa); }
+.form__note { font-size: .8rem; color: var(--ink-3); }
+
+.info { display: flex; flex-direction: column; gap: 1.85rem; }
+.info__list { display: flex; flex-direction: column; gap: 1.15rem; }
+.info__row { display: flex; gap: .9rem; }
+.info__ic {
+  display: grid;
+  place-items: center;
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--brand-wash);
+  color: var(--brand);
+}
+.info__body { display: flex; flex-direction: column; min-inline-size: 0; }
+.info__k {
+  font-family: var(--font-display);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+[lang="ar"] .info__k { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .82rem; }
+.info__k--head { margin-block-end: .6rem; }
+.info__k + .info__k,
+.info__v + .info__k { margin-block-start: .55rem; }
+.info__v { font-weight: 600; overflow-wrap: anywhere; }
+.info__v a { text-decoration: none; }
+.info__v a:hover { color: var(--brand); text-decoration: underline; }
+
+/* A phone number is a left-to-right entity. Without isolation the bidi
+   algorithm treats each space-separated digit group as its own run and
+   orders the runs right-to-left in Arabic, so "056 779 4638" renders as
+   "4638 779 056" — a number a visitor could genuinely misdial. The groups
+   still flow in the page direction; only the digits inside each link are
+   pinned. Website addresses need the same treatment for the same reason. */
+.info__v a[href^="tel:"],
+.info__v a[href^="https://wa.me"],
+.info__v a[href*="hydrasteamfoam"],
+.footer__contact a[href^="tel:"],
+.footer__contact a[href*="hydrasteamfoam"] {
+  unicode-bidi: isolate;
+  direction: ltr;
+}
+.info__note { font-size: .85rem; color: var(--ink-3); margin-block-start: .3rem; }
+
+.hours { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+.hours__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 1.05rem;
+  font-size: .93rem;
+  background: var(--surface-2);
+}
+.hours__day { color: var(--ink-2); }
+.hours__time { font-weight: 700; color: var(--gold-ink); }
+
+.map {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  aspect-ratio: 16 / 10;
+  background: var(--surface-2);
+}
+.map iframe { inline-size: 100%; block-size: 100%; border: 0; display: block; }
+.info .btn { align-self: flex-start; }
+
+/* ------------------------------------------------------------------ *
+   Contact strip — the white band across the foot of the flyer
+ * ------------------------------------------------------------------ */
+.strip {
+  border-block: 1px solid var(--line);
+  background: var(--surface);
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+}
+.strip__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1.5rem;
+}
+.strip__item { display: flex; align-items: center; gap: .9rem; justify-content: center; }
+@media (max-width: 700px) { .strip__item { justify-content: flex-start; } }
+.strip__ic {
+  display: grid;
+  place-items: center;
+  inline-size: 2.9rem;
+  block-size: 2.9rem;
+  flex: none;
+  border-radius: 10px;
+  background: var(--brand);
+  color: #ffffff;
+}
+.strip__ic .icon { inline-size: 1.5rem; block-size: 1.5rem; }
+.strip__body { display: flex; flex-direction: column; min-inline-size: 0; }
+.strip__k {
+  font-family: var(--font-display);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+[lang="ar"] .strip__k { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .74rem; }
+.strip__v { font-weight: 700; font-size: .97rem; overflow-wrap: anywhere; }
+.strip__v a { text-decoration: none; }
+.strip__v a:hover { color: var(--brand); text-decoration: underline; }
+.strip__v a[href^="tel:"],
+.strip__v a[href*="hydrasteamfoam"] { unicode-bidi: isolate; direction: ltr; }
+
+/* ------------------------------------------------------------------ *
+   Footer
+ * ------------------------------------------------------------------ */
+.footer {
+  padding-block: clamp(2.5rem, 5vw, 3.5rem) 1.5rem;
+  background: var(--bg-alt);
+  border-block-start: 1px solid var(--line);
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) repeat(2, minmax(0, .65fr));
+  gap: clamp(1.75rem, 4vw, 3rem);
+}
+@media (max-width: 800px) { .footer__grid { grid-template-columns: 1fr; } }
+.footer__about { margin-block-start: 1rem; color: var(--ink-2); font-size: .93rem; max-inline-size: 36rem; }
+.footer__legal { margin-block-start: .75rem; font-size: .85rem; color: var(--ink-3); }
+.footer__h {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .77rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-block-end: .9rem;
+}
+[lang="ar"] .footer__h { font-family: var(--font-ar); letter-spacing: 0; text-transform: none; font-size: .88rem; }
+.footer__links { display: flex; flex-direction: column; gap: .5rem; }
+.footer__links a, .footer__contact a { text-decoration: none; color: var(--ink-2); font-size: .93rem; }
+.footer__links a:hover, .footer__contact a:hover { color: var(--brand); }
+.footer__contact { display: flex; flex-direction: column; gap: .5rem; color: var(--ink-2); font-size: .93rem; }
+.footer__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: .5rem 1.5rem;
+  margin-block-start: clamp(2rem, 4vw, 2.75rem);
+  padding-block-start: 1.25rem;
+  border-block-start: 1px solid var(--line);
+  font-size: .84rem;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------------ *
+   Mobile action bar
+ * ------------------------------------------------------------------ */
+.actionbar {
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: 55;
+  display: none;
+  gap: .6rem;
+  padding: .6rem var(--gutter) calc(.6rem + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--bg) 93%, transparent);
+  backdrop-filter: blur(12px);
+  border-block-start: 1px solid var(--line);
+}
+.actionbar .btn { flex: 1; }
+
+@media (max-width: 760px) {
+  .actionbar { display: flex; }
+  body { padding-block-end: 4.9rem; }
+}
